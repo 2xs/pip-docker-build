@@ -14,17 +14,19 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 RUN wget -qO- https://get.haskellstack.org/ | sh
 
-ENV OPAMROOT=$HOME/opam-coq.8.5.2
+ENV OPAMROOT=$HOME/opam
+ENV OPAM_VERSION="4.01.0"
+ENV OPAM_PATH="${OPAMROOT}/${OPAM_VERSION}"
 ENV OPAMYES="true"
 ENV OPAMJOBS=2
 
-RUN opam init -n --comp=4.01.0 -j 2
+RUN opam init -n --comp=${OPAM_VERSION} -j 2
 
-ENV CAML_LD_LIBRARY_PATH="/root/opam-coq.8.5.2/4.01.0/lib/stublibs"
-ENV MANPATH="/root/opam-coq.8.5.2/4.01.0/man"
-ENV PERL5LIB="/root/opam-coq.8.5.2/4.01.0/lib/perl5"
-ENV OCAML_TOPLEVEL_PATH="/root/opam-coq.8.5.2/4.01.0/lib/toplevel"
-ENV PATH="/root/opam-coq.8.5.2/4.01.0/bin:${PATH}"
+ENV CAML_LD_LIBRARY_PATH="${OPAM_PATH}/lib/stublibs"
+ENV MANPATH="${OPAM_PATH}/man"
+ENV PERL5LIB="${OPAM_PATH}/lib/perl5"
+ENV OCAML_TOPLEVEL_PATH="${OPAM_PATH}/lib/toplevel"
+ENV PATH="${OPAM_PATH}/bin:${PATH}"
 
 RUN opam repo add coq-released http://coq.inria.fr/opam/released
 RUN opam install coq.8.5.2
@@ -32,7 +34,6 @@ RUN opam pin add coq 8.5.2
 
 RUN git clone https://github.com/2xs/libpip -b feature/docker-build
 RUN git clone https://github.com/2xs/pipcore
-
 
 WORKDIR $HOME/libpip
 RUN make
@@ -46,4 +47,4 @@ WORKDIR $HOME/pipcore/tools/digger
 RUN stack setup
 
 WORKDIR $HOME/pipcore/
-RUN make PARTITION=minimal partition
+RUN make PARTITION=minimal partition ; make PARTITION=minimal partition
