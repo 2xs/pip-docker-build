@@ -47,4 +47,4 @@ WORKDIR $HOME/pipcore/tools/digger
 RUN stack setup
 
 WORKDIR $HOME/pipcore/
-RUN make PARTITION=minimal partition ; make PARTITION=minimal partition
+RUN make PARTITION=minimal partition
