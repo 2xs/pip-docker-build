@@ -45,6 +45,7 @@ RUN sed "s/LIBPIP=.*/LIBPIP=\/root\/libpip/g" src/partitions/x86/toolchain.mk.te
 
 WORKDIR $HOME/pipcore/tools/digger
 RUN stack setup
+RUN stack build
 
 WORKDIR $HOME/pipcore/
-RUN make PARTITION=minimal partition
+RUN make PARTITION=minimal partition kernel ; make PARTITION=minimal partition kernel
